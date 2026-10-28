@@ -21,7 +21,7 @@ For every test in this post I used one 8.7 MB specimen image as the "ID":
 
 **Presigned upload.** The browser asks the app for an upload URL, `PUT`s the file straight to S3, then calls `/complete`. The app inspects what S3 actually stored and promotes it. Reads are 60-second presigned `GET` links.
 
-Both versions share everything else: server-side sessions, a CSRF check on state-changing requests, the same rate limits and document cap, keys built from the user ID plus a server-generated ID, and a private bucket (ACLs disabled, Block Public Access on, SSE-S3, TLS-only bucket policy). I built the backend version first, then changed only the two paths. The presigned repository starts from the backend one, so a single `git diff` is the entire cost of the switch.
+Both versions share everything else: server-side sessions, a CSRF check on state-changing requests, the same rate limits and document cap, keys built from the user ID plus a server-generated ID, and a private bucket (ACLs disabled, Block Public Access on, SSE-S3, TLS-only bucket policy). I built the backend version first, then changed only the two paths. Both are public: [idv-portal-demo](https://github.com/Oleksii-Martynenko-hub/idv-portal-demo) (backend upload) and [idv-portal-signed-demo](https://github.com/Oleksii-Martynenko-hub/idv-portal-signed-demo) (presigned upload). The presigned repository starts from the backend one, so [a single diff](https://github.com/Oleksii-Martynenko-hub/idv-portal-signed-demo/compare/153ba52...main) is the entire cost of the switch.
 
 ---
 
@@ -181,7 +181,15 @@ A presigned URL is safe only as one layer: issued by an authorized endpoint, sig
 - Lifecycle cleanup of staging and incomplete multipart uploads
 - Short read links with forced response headers; redact signatures, tokens, and key IDs from logs
 
-Both versions — the backend-upload portal and the presigned-upload portal, with shared git history so the diff is exactly the change — are in the companion repositories. Not covered here, and good candidates for a follow-up: presigned `POST` with `content-length-range`, multipart uploads, S3-compatible stores, malware scanning, and CloudFront signed URLs.
+Both versions share git history, so the diff between them is exactly the change:
+
+- Backend upload: https://github.com/Oleksii-Martynenko-hub/idv-portal-demo
+- Presigned upload: https://github.com/Oleksii-Martynenko-hub/idv-portal-signed-demo
+- What changed between them: https://github.com/Oleksii-Martynenko-hub/idv-portal-signed-demo/compare/153ba52...main
+
+Each README covers running locally and deploying to AWS.
+
+Not covered here, and good candidates for a follow-up: presigned `POST` with `content-length-range`, multipart uploads, S3-compatible stores, malware scanning, and CloudFront signed URLs.
 
 ---
 
